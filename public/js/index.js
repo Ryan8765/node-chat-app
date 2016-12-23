@@ -8,9 +8,9 @@ socket.on('connect',  function() {
 
 
 	//emit events from within socket.on connect so you don't emit the event before you are connected. this emits an event "createEmail" to the server, where there is a listener "createEmail" waiting to get the event
-	socket.emit('createEmail', {
-		to: "rmhaas2211@gmail.com",
-		text: "This is ryan"
+	socket.emit('createMessage', {
+		from: "Jessica",
+		text: "saying a bunch of shit"
 	});
 
 
@@ -21,7 +21,9 @@ socket.on('disconnect',  function() {
 });
 
 
+
 //this is a custom event we are creating "newEmail" - basicallly a listener.  It is waiting for events to be fired from the server.
-socket.on('newEmail',  function (email) {
-	console.log('New Email', email);
+//listen for "newMessage" event from the server
+socket.on('newMessage', function(msg) {
+	console.log( "received new message from Server ", msg );
 });
