@@ -21,6 +21,22 @@ app.use(express.static(publicPath));
 
 io.on('connection',  (socket) => {
 	console.log('New user connected!!!!!');
+
+	//we can emit an event using the "emit" function.  second argument is for the data.  This fires the "newEmail" event from the server to the client where the client is waiting to receive it. 
+	socket.emit('newEmail', {
+		from: 'mike@example.com',
+		text: 'Hey, what is going on',
+		createAt: 123
+	});
+
+	//create an event listener on the server, waiting for events that are emitted from the browser.
+	socket.on('createEmail',  (newEmail) => {
+		console.log('createEmail ', newEmail);
+	});
+
+
+
+
 	//register to the cmd when the user disconnects
 	socket.on('disconnect',  () => {
 		console.log( "Client disconnected" );
