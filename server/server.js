@@ -6,7 +6,7 @@ const publicPath = path.join(__dirname, '../public');
 //create an environment variable to define the port the server is running off of
 const port = process.env.PORT || 3000;
 
-
+//user express npm module for this application
 var app = express();
 
 
