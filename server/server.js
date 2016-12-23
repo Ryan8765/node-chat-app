@@ -32,7 +32,7 @@ io.on('connection',  (socket) => {
 	});
 
 
-	//create an event listener on the server, waiting for events that are emitted from the browser.
+	//create an event listener on the server, waiting for events that are emitted from the browser...
 	socket.on('createMessage',  (msg) => {
 		console.log( "createMessage ", msg );
 	});
