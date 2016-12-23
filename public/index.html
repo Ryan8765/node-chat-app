@@ -10,7 +10,20 @@
 <body>
 	<p>Welcome to the chat app</p>
  	
+	
+	<!-- load in socket.io library -->
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		//this is a method loaded because of IO.  This opens up a web socket.  This is how we communicate back and forth using this variable. 
+		var socket = io();
 
-	<!-- <script src="js/scripts.js"></script> -->
+		socket.on('connect',  () => {
+			console.log('connected to server');
+		});
+
+		socket.on('disconnect',  () => {
+			console.log('Disconnected from server');
+		});
+	</script>
 </body>
 </html>
