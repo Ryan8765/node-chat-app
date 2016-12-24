@@ -7,11 +7,11 @@ socket.on('connect',  function() {
 	console.log('connected to server');
 
 
-	//emit events from within socket.on connect so you don't emit the event before you are connected. this emits an event "createEmail" to the server, where there is a listener "createEmail" waiting to get the event
-	socket.emit('createMessage', {
-		from: "Jessica",
-		text: "saying a bunch of shit"
-	});
+	// //emit events from within socket.on connect so you don't emit the event before you are connected. this emits an event "createEmail" to the server, where there is a listener "createEmail" waiting to get the event
+	// socket.emit('createMessage', {
+	// 	from: "Jessica",
+	// 	text: "saying a bunch of shit"
+	// });
 
 
 });
