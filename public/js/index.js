@@ -27,3 +27,5 @@ socket.on('disconnect',  function() {
 socket.on('newMessage', function(msg) {
 	console.log( "received new message from Server ", msg );
 });
+
+

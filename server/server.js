@@ -22,6 +22,21 @@ app.use(express.static(publicPath));
 io.on('connection',  (socket) => {
 	console.log('New user connected!!!!!');
 
+	//emit message to new user when 
+	socket.emit('newMessage', {
+		from: 'Admin',
+		text: 'Welcome to the chat app',
+		createdAt: new Date().getTime()
+
+	});
+
+	//broadcast message to everyone but the new user who connected
+	socket.broadcast.emit('newMessage', {
+		from: 'Admin',
+		text: 'New user joined the chat',
+		createdAt: new Date().getTime()
+	});
+
 
 
 	//we can emit an event using the "emit" function (this goes to a single connection, whereas "io.emit" goes to everyone.  second argument is for the data.  This fires the "newEmail" event from the server to the client where the client is waiting to receive it. 
@@ -40,7 +55,15 @@ io.on('connection',  (socket) => {
 			from: msg.from,
 			text: msg.text,
 			createdAt: new Date().getTime()
-		})
+		});
+
+		//broadcast - this will send an event to everyone BUT yourself.  So in a chat room if you enter, you don't need to see the fact that you entered the chat room. 
+		// socket.broadcast.emit('newMessage', {
+		// 		from: msg.from,
+		// 		text: msg.text,
+		// 		createdAt: new Date().getTime()
+		// 	});
+
 	});
 
 
