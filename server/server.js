@@ -42,17 +42,11 @@ io.on('connection',  (socket) => {
 
 
 	//create an event listener on the server, waiting for events that are emitted from the browser...
-	socket.on('createMessage',  (msg) => {
+	socket.on('createMessage',  (msg, callback) => {
 		console.log( "createMessage ", msg );
 		//io.emit emits an event to every connection where "socket.on" emits it to a single connection.
 		io.emit('newMessage', generateMessage(msg.from, msg.text));
-
-		//broadcast - this will send an event to everyone BUT yourself.  So in a chat room if you enter, you don't need to see the fact that you entered the chat room. 
-		// socket.broadcast.emit('newMessage', {
-		// 		from: msg.from,
-		// 		text: msg.text,
-		// 		createdAt: new Date().getTime()
-		// 	});
+		callback('This is from the server callback.');
 
 	});
 
