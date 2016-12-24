@@ -4,7 +4,8 @@ const express  = require('express');
 const socketIO = require('socket.io');
 
 
-const {generateMessage} = require('./utils/message');
+
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 //use publicPath to get to the public folder.  using "path" module allows you to get there without the file structure going into the server fold and then back out again.
 const publicPath = path.join(__dirname, '../public');
@@ -33,21 +34,16 @@ io.on('connection',  (socket) => {
 
 
 
-	//we can emit an event using the "emit" function (this goes to a single connection, whereas "io.emit" goes to everyone.  second argument is for the data.  This fires the "newEmail" event from the server to the client where the client is waiting to receive it. 
-	// socket.emit('newMessage', {
-	// 	from: "Ryan",
-	// 	text: "Some BS text",
-	// 	createdAt: "12:53"
-	// });
-
-
 	//create an event listener on the server, waiting for events that are emitted from the browser...
 	socket.on('createMessage',  (msg, callback) => {
 		console.log( "createMessage ", msg );
 		//io.emit emits an event to every connection where "socket.on" emits it to a single connection.
 		io.emit('newMessage', generateMessage(msg.from, msg.text));
 		callback('This is from the server callback.');
+	});
 
+	socket.on('createLocationMessage',  (coords) => {
+		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
 	});
 
 
