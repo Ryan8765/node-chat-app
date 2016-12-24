@@ -14,6 +14,14 @@ _______________________________________________
 	- makes it easy to set up a server that allows communication from front end to back end via the server.
 	- You get access to a route that accepts incoming connections and we got access to a javascript library. localhost:3000/socket.io/socket.io.js
 
+4. Expect & Mocha
+	- npm install expect@1.20.2 mocha@3.0.2 --save-dev
+	- Expect documentation
+		https://github.com/mjackson/expect
+	- Mocha Documentation
+		http://mochajs.org/
+
+
 
 
 
