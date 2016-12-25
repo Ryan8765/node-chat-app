@@ -21,6 +21,7 @@ _______________________________________________
 	- Mocha Documentation
 		http://mochajs.org/
 5. Moment.js
+	- docs - momentjs.com
 
 _______________________________________________
 
@@ -36,12 +37,14 @@ Plugins
 _______________________________________________
 	
 1. jQuery
+2. Mustache.js 
+	- docs - https://github.com/janl/mustache.js/
 
 
 
 _______________________________________________
 
-Usage
+Usage socket.io
 _______________________________________________
 
 ******Server Side********
@@ -109,5 +112,42 @@ _______________________________________________
 		text: 'Hi'
 	}, function(data) {
 		console.log(data);
+
+	});
+
+
+_______________________________________________
+
+Usage mustache
+_______________________________________________
+
+HTML:
+	<!-- this creates a mustache template -->
+	<script id="message-template" type="text/template">
+		<li class="message">
+			<div class="message__title">
+				<h4>{{from}}</h4>
+				<span>{{createdAt}}</span>
+			</div>
+			<div class="message__body">
+				<p>{{text}}</p>
+			</div>
+		</li>
+	</script>
+	<!-- this creates a mustache template -->
+
+Javascript page:
+
+	socket.on('newMessage', function(msg) {
+		var formattedTime = moment(msg.createdAt).format('h:mm a');
+		var template = $('#message-template').html();
+		//render the template using mustache
+		var html = Mustache.render(template, {
+			text: msg.text,
+			from: msg.from,
+			createdAt: formattedTime
+		});
+
+		$('#messages').append(html);
 
 	});
