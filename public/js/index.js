@@ -16,10 +16,10 @@ socket.on('disconnect',  function() {
 //this is a custom event we are creating "newEmail" - basicallly a listener.  It is waiting for events to be fired from the server.
 //listen for "newMessage" event from the server
 socket.on('newMessage', function(msg) {
-	console.log( "received new message from Server ", msg );
+	var formattedTime = moment(msg.createdAt).format('h:mm a');
 	var li = $('<li></li>');
 
-	li.text(`${msg.from}: ${msg.text}`);
+	li.text(`${msg.from} ${formattedTime}: ${msg.text}`);
 	$('#messages').append(li);
 });
 
@@ -38,10 +38,11 @@ $('#message-form').on('submit', function(e){
 });
 
 socket.on('newLocationMessage', function(message) {
-	var li = $('<li></li>');
-	var a = $('<a target="_blank">My Current Location</a>');
+	var li            = $('<li></li>');
+	var a             = $('<a target="_blank">My Current Location</a>');
+	var formattedTime = moment(message.createdAt).format('h:mm a');
 
-	li.text(`${message.from}: `);
+	li.text(`${message.from} ${formattedTime}: `);
 	a.attr('href', message.url);
 
 	li.append(a);
