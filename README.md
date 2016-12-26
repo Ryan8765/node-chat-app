@@ -39,6 +39,11 @@ _______________________________________________
 1. jQuery
 2. Mustache.js 
 	- docs - https://github.com/janl/mustache.js/
+3. deparam 
+	- used for parsing params from the URL
+	- documentation - links.mead.io/deparam
+	- You can use this with $.deparam(window.location.search)
+		- resulting is an object of name/value pairs in an object.
 
 
 
@@ -114,6 +119,22 @@ _______________________________________________
 		console.log(data);
 
 	});
+
+
+****************joining rooms**********************
+	//socket.join allows you to create separate "rooms", for people to talk in the same room.
+	socket.join(params.room);
+	//socket.leave - will allow you to leave a room
+	socket.leave(params.room);
+
+***************emitting to room***********************
+	//emit to everyone in a particular room
+	io.to(params.room).emit
+	//send event to everyone in the room except for yourself
+	socket.broadcast.to(params.room).emit
+
+***************socket has id's**********************
+	//each socket that is opened, has an id associated with it	
 
 
 _______________________________________________

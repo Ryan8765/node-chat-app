@@ -6,6 +6,8 @@ const socketIO = require('socket.io');
 
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString}                             = require('./utils/validation');
+const {Users}                                    = require('./utils/users');
 
 //use publicPath to get to the public folder.  using "path" module allows you to get there without the file structure going into the server fold and then back out again.
 const publicPath = path.join(__dirname, '../public');
@@ -19,6 +21,8 @@ var server = http.createServer( app );
 //configure the server to use socket.io. This is how we communicate between the server and the client.
 var io = socketIO( server );
 
+var users = new Users();
+
 
 //this gets express to set the path to where the html files will be served up from
 app.use(express.static(publicPath));
@@ -26,13 +30,32 @@ app.use(express.static(publicPath));
 io.on('connection',  (socket) => {
 	console.log('New user connected!!!!!');
 
-	//emit message to new user when 
-	socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app.'));
 
-	//broadcast message to everyone but the new user who connected
-	socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined.'));
+	//handles joining rooms - "join" is a custom event we create
+	socket.on('join',  (params, callback) => {
 
+		//check to make sure params are valid
+		if( !isRealString(params.name) || !isRealString(params.room) ) {
+			//by returning here - it won't fire any code below this if the data isn't valid.
+			return callback('Name and room name are required');
+		}
 
+		//this is built into socket - allows users to join different areas
+		socket.join(params.room);
+		//make sure to remove the user from any other rooms
+		users.removeUser(socket.id);
+		users.addUser(socket.id, params.name, params.room);
+		io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+
+		//emit message to new user when 
+		socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app.'));
+
+		//broadcast message to everyone in the room but the new user who connected
+		socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`));
+
+		//if no errors, pass empty callback back.
+		callback();
+	});
 
 	//create an event listener on the server, waiting for events that are emitted from the browser...
 	socket.on('createMessage',  (msg, callback) => {
@@ -51,7 +74,13 @@ io.on('connection',  (socket) => {
 
 	//register to the cmd when the user disconnects
 	socket.on('disconnect',  () => {
-		console.log( "Client disconnected" );
+		console.log('should have removed user');
+		var user = users.removeUser(socket.id);
+
+		if(user) {
+			io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+			io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
+		}
 	});
 });
 
