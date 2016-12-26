@@ -59,14 +59,22 @@ io.on('connection',  (socket) => {
 
 	//create an event listener on the server, waiting for events that are emitted from the browser...
 	socket.on('createMessage',  (msg, callback) => {
-		console.log( "createMessage ", msg );
-		//io.emit emits an event to every connection where "socket.on" emits it to a single connection.
-		io.emit('newMessage', generateMessage(msg.from, msg.text));
+		var user = users.getUser(socket.id);
+
+		if( user && isRealString(msg.text) ) {
+			//io.emit emits an event to every connection where "socket.on" emits it to a single connection.
+			io.to(user.room).emit('newMessage', generateMessage(user.name, msg.text));
+		}
+		
 		callback();
 	});
 
 	socket.on('createLocationMessage',  (coords) => {
-		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+
+		var user = users.getUser(socket.id);
+		if(user) {
+			io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+		}
 	});
 
 
